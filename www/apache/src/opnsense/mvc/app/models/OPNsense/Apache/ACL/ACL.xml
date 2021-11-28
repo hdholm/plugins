@@ -1,0 +1,9 @@
+<acl>
+    <page-services-apache>
+        <name>Services: Apache</name>
+        <patterns>
+            <pattern>ui/apache/*</pattern>
+            <pattern>api/apache/*</pattern>
+        </patterns>
+    </page-services-apache>
+</acl>

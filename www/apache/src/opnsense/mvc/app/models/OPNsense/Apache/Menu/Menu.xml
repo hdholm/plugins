@@ -1,0 +1,7 @@
+<menu>
+    <Services>
+        <Apache>
+            <Gateways url="/ui/apache/gateway"/>
+        </Apache>
+    </Services>
+</menu>
