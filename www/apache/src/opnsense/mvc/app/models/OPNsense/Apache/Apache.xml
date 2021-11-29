@@ -24,5 +24,28 @@
                 </description>
             </virtualserver>
         </virtualservers>
+        <locations>
+            <location type="ArrayField">
+                <enabled type="BooleanField">
+                    <default>1</default>
+                    <Required>Y</Required>
+                </enabled>
+                <virtualserver type="ModelRelationField">
+                    <Required>Y</Required>
+                    <Model>
+                        <virtualserver>
+                            <source>OPNsense.Apache.Apache</source>
+                            <items>virtualservers.virtualserver</items>
+                            <display>description</display>
+                        </virtualserver>
+                    </Model>
+                </virtualserver>
+                <description type="TextField">
+                    <Required>Y</Required>
+                    <mask>/^([\t\n\v\f\r 0-9a-zA-Z.,_\x{00A0}-\x{FFFF}]){1,255}$/u</mask>
+                    <ValidationMessage>Description should be a string between 1 and 255 characters</ValidationMessage>
+                </description>
+            </location>
+        </locations>
     </items>
 </model>

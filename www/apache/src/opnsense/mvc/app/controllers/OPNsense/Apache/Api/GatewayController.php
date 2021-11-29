@@ -63,4 +63,57 @@ class GatewayController extends ApiMutableModelControllerBase
     {
         return $this->toggleBase("virtualservers.virtualserver", $uuid, $enabled);
     }
+
+    public function searchLocationAction()
+    {
+        $virtualserver = $this->request->get('virtualserver');
+        $filter_funct = null;
+        if (!empty($virtualserver)) {
+            $filter_funct = function ($record) use ($virtualserver) {
+                return $record->virtualserver == $virtualserver;
+            };
+        }
+        return $this->searchBase(
+            "locations.location",
+            ['enabled', 'description', 'virtualserver'],
+            "sequence",
+            $filter_funct
+        );
+    }
+
+    public function setLocationAction($uuid)
+    {
+        return $this->setBase("location", "locations.location", $uuid);
+    }
+
+    public function addLocationAction()
+    {
+        return $this->addBase("location", "locations.location");
+    }
+
+    public function getLocationAction($uuid = null)
+    {
+        $vs_uuid = $this->request->get('virtualserver');
+        $result = $this->getBase("location", "locations.location", $uuid);
+        if (empty($uuid) && !empty($vs_uuid)) {
+            foreach ($result['location']['virtualserver'] as $key => &$value) {
+                if ($key == $vs_uuid) {
+                    $value['selected'] = 1;
+                } else {
+                    $value['selected'] = 0;
+                }
+            }
+        }
+        return $result;
+    }
+
+    public function delLocationAction($uuid)
+    {
+        return $this->delBase("locations.location", $uuid);
+    }
+
+    public function toggleLocationAction($uuid, $enabled = null)
+    {
+        return $this->toggleBase("locations.location", $uuid, $enabled);
+    }
 }

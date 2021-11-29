@@ -33,5 +33,6 @@ class GatewayController extends \OPNsense\Base\IndexController
     {
         $this->view->pick('OPNsense/Apache/gateway');
         $this->view->formDialogVirtualServer = $this->getForm("dialogVirtualServer");
+        $this->view->formDialogLocation = $this->getForm("dialogLocation");
     }
 }

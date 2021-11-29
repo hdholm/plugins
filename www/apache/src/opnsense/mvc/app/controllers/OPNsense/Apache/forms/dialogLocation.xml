@@ -1,0 +1,19 @@
+<form>
+    <field>
+        <id>location.enabled</id>
+        <label>Enabled</label>
+        <type>checkbox</type>
+        <help>Enable this virtual server</help>
+    </field>
+    <field>
+        <id>location.virtualserver</id>
+        <label>VirtualServer</label>
+        <type>dropdown</type>
+        <help>Select the associated virtual server.</help>
+    </field>
+    <field>
+        <id>location.description</id>
+        <label>Description</label>
+        <type>text</type>
+    </field>
+</form>
