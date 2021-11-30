@@ -1,0 +1,20 @@
+<form>
+    <field>
+        <id>tang.general.Enabled</id>
+        <label>Enable Tang</label>
+        <type>checkbox</type>
+        <help>Enable the tang server.</help>
+    </field>
+    <field>
+        <id>tang.general.ListenPort</id>
+        <label>TCP port number service listens on:</label>
+        <type>text</type>
+	<help>TCP port number for Tang to listen on. Defaults to 8888.</help>
+    </field>
+    <field>
+        <id>tang.general.Interfaces</id>
+        <label>Interface to listen on:</label>
+	<type>select_multiple</type>
+	<help>Interface for Tang to listen on. If you need multiple interfaces use localhost and port forward from other interfaces.</help>
+    </field>
+ </form>

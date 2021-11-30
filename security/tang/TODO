@@ -1,0 +1,7 @@
+Fix interface selection in configuration page
+Add log output page
+Allow multiple interface listeners (need to figure out how to do that.)
+make jwdir configurable
+  - Add to form config for service
+  - Used config value in rekey service action
+

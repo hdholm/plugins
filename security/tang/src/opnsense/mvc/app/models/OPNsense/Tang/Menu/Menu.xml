@@ -1,0 +1,11 @@
+<menu>
+    <!-- Plugin Tang menu -->
+    <Services>
+	    <Tang VisibleName="Tang" cssClass="fa fa-tags fa-fw" >
+            <General order="10" url="/ui/tang" />
+            <Keys order="20" url="/ui/tang/stats"/>
+            <LogFile VisibleName="Log File" order="100" url="/ui/diagnostics/log/core/tang"/>
+        </Tang>
+    </Services>
+</menu>
+
