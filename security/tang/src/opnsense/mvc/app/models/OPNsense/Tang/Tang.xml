@@ -15,7 +15,7 @@
             </ListenPort>
             <Interfaces type="InterfaceField">
                 <multiple>Y</multiple>
-                <default>LAN</default>
+                <default>localhost</default>
             </Interfaces>
 	    <jwkdir type="TextField">
                 <default>"/var/db/tang"</default>
