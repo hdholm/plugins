@@ -61,7 +61,6 @@ POSSIBILITY OF SUCH DAMAGE.
     using this service have updated to new keys.') }}
     </p>
 
-    {{ partial("layout_partials/base_form",['fields':generalForm,'id':'frm_GeneralSettings'])}}
 </div>
 
 <div class="col-md-12">
