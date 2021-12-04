@@ -30,6 +30,8 @@ POSSIBILITY OF SUCH DAMAGE.
         var data_get_map = {'frm_GeneralSettings':"/api/tang/settings/get"};
         mapDataToFormUI(data_get_map).done(function(data){
             // place actions to run after load, for example update form styles.
+            formatTokenizersUI();
+            $('select').selectpicker('refresh');
         });
 
         // link save button to API set action

@@ -13,9 +13,14 @@
 	    <ListenPort type="PortField">
 		 <Default>8888</Default>
             </ListenPort>
-            <Interfaces type="InterfaceField">
-                <multiple>Y</multiple>
-                <default>localhost</default>
+	    <Interfaces type="InterfaceField">
+                <Required>Y</Required>
+                <multiple>N</multiple>
+                <default>lan</default>
+                <filters>
+                    <enable>/^(?!0).*$/</enable>
+                    <ipaddr>/^((?!dhcp).)*$/</ipaddr>
+                </filters>
             </Interfaces>
 	    <jwkdir type="TextField">
                 <default>"/var/db/tang"</default>

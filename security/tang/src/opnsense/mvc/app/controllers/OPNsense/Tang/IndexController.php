@@ -34,22 +34,7 @@ namespace OPNsense\Tang;
  */
 class IndexController extends \OPNsense\Base\IndexController
 
-{  /**
-     * collect interface names
-     * @return array interface mapping (raw interface to description)
-     */
-    public function getInterfaceNames()
-    {
-        $intfmap = array();
-        $config = Config::getInstance()->object();
-        if ($config->interfaces->count() > 0) {
-            foreach ($config->interfaces->children() as $key => $node) {
-                $intfmap[(string)$node->if] = !empty((string)$node->descr) ? (string)$node->descr : $key;
-            }
-        }
-        return $intfmap;
-    }
-
+{
     public function indexAction()
     {
         // pick the template to serve to our users.
