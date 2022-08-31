@@ -45,6 +45,8 @@ class BgpController extends ApiMutableModelControllerBase
                   "description",
                   "address",
                   "remoteas",
+                  "password",
+                  "localip",
                   "updatesource",
                   "nexthopself",
                   "multihop",
@@ -193,6 +195,11 @@ class BgpController extends ApiMutableModelControllerBase
     public function setRoutemapAction($uuid)
     {
         return $this->setBase('routemap', 'routemaps.routemap', $uuid);
+    }
+
+    public function toggleCommunitylistAction($uuid)
+    {
+        return $this->toggleBase('communitylists.communitylist', $uuid);
     }
 
     public function toggleNeighborAction($uuid)
