@@ -1,36 +1,31 @@
 <model>
     <mount>//OPNsense/tang</mount>
     <description>
-        Tang is a small daemon for binding data to the presence of a network
+        Tang is a small daemon for binding data to the presence of a network.
     </description>
     <items>
         <!-- container -->
         <general>
 	    <!-- fields -->
-            <Enabled type="BooleanField">
+            <enabled type="BooleanField">
                 <default>0</default>
-            </Enabled>
-	    <ListenPort type="PortField">
+            </enabled>
+	    <port type="PortField">
 		 <Default>8888</Default>
-            </ListenPort>
-	    <Interfaces type="InterfaceField">
-                <Required>Y</Required>
+            </port>
+	    <interface type="InterfaceField">
+                <Required>N</Required>
                 <multiple>N</multiple>
-                <default>lan</default>
-                <filters>
-                    <enable>/^(?!0).*$/</enable>
-                    <ipaddr>/^((?!dhcp).)*$/</ipaddr>
-                </filters>
-            </Interfaces>
+            </interface>
 	    <jwkdir type="TextField">
                 <default>"/var/db/tang"</default>
             </jwkdir>
-	    <LogFile type="TextField">
+	    <log type="TextField">
                 <default>"/var/log/tang"</default>
-            </LogFile>
-            <Executable type="TextField">
+            </log>
+            <executable type="TextField">
                 <default>"/usr/local/libexec/tangd"</default>
-            </Executable>
+            </executable>
         </general>
     </items>
 </model>
