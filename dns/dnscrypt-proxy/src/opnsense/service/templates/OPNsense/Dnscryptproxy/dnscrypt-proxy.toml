@@ -5,7 +5,7 @@ server_names = [{{ "'" + ("','".join(OPNsense.dnscryptproxy.general.serverlist.s
 {%   endif %}
 
 {%   if helpers.exists('OPNsense.dnscryptproxy.general.disabled_serverlist') and OPNsense.dnscryptproxy.general.disabled_serverlist != '' %}
-disabled_server_names = ['{{OPNsense.dnscryptproxy.general.disabled_serverlist}}']
+disabled_server_names = [{{ "'" + ("','".join(OPNsense.dnscryptproxy.general.disabled_serverlist.split(','))) + "'" }}]
 {%   endif %}
 
 {%   if helpers.exists('OPNsense.dnscryptproxy.general.listen_addresses') and OPNsense.dnscryptproxy.general.listen_addresses != '' %}
@@ -151,6 +151,24 @@ cache = false
   minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
   refresh_delay = 72
   prefix = ''
+
+  ## Anonymized DNS relays
+
+  [sources.'relays']
+  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/relays.md', 'https://download.dnscrypt.info/resolvers-list/v3/relays.md', 'https://ipv6.download.dnscrypt.info/resolvers-list/v3/relays.md', 'https://download.dnscrypt.net/resolvers-list/v3/relays.md']
+  cache_file = 'relays.md'
+  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+  refresh_delay = 72
+  prefix = ''
+
+[anonymized_dns]
+
+{% if helpers.exists('OPNsense.dnscryptproxy.general.relaylist') and OPNsense.dnscryptproxy.general.relaylist != '' %}
+ routes = [
+    { server_name='*', via=[{{ "'" + ("','".join(OPNsense.dnscryptproxy.general.relaylist.split(','))) + "'" }}] }
+ ]
+{% endif %}
+
 
 [static]
 {% if helpers.exists('OPNsense.dnscryptproxy.server.servers.server') %}

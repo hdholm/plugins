@@ -1265,8 +1265,8 @@ class updatedns
                         'Authorization: sso-key ' . $this->_dnsUser . ':' . $this->_dnsPass
                 ));
                 curl_setopt($ch, CURLOPT_URL, $url);
-
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonBody);
+                curl_setopt($ch, CURLOPT_INTERFACE, $this->_dnsRequestIf);
                 break;
             case 'desec':
                 /*
@@ -2022,7 +2022,7 @@ class updatedns
 
     function _checkIP()
     {
-        $ip_address = get_dyndns_ip($this->_if, $this->_useIPv6 ? 6 : 4);
+        $ip_address = get_dyndns_ip_address($this->_if, $this->_useIPv6 ? 6 : 4);
         if (!is_ipaddr($ip_address)) {
             if ($this->_dnsVerboseLog) {
                 log_error("Dynamic DNS ({$this->_dnsHost}): IP address could not be extracted");

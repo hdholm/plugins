@@ -13,7 +13,6 @@
                 <peap>PEAP</peap>
                 <tls>TLS</tls>
                 <ttls>TTLS</ttls>
-                <ttls-gtc>TTLS-GTC</ttls-gtc>
             </OptionValues>
         </default_eap_type>
         <elliptic_curve type="OptionField">
@@ -46,7 +45,7 @@
             <Required>Y</Required>
         </check_tls_names>
         <tls_min_version type="OptionField">
-            <default>Option1</default>
+            <default>1.0</default>
             <Required>Y</Required>
             <multiple>N</multiple>
             <OptionValues>
