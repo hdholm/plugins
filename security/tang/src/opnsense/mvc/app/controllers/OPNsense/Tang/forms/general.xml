@@ -13,9 +13,15 @@
     </field>
     <field>
         <id>tang.general.interface</id>
-        <label>Listen Interface:</label>
-	<type>select_multiple</type>
-	<style>dropdownstyle</style>
-	<help>Interface to listen on.  Default is localhost. If you need multiple interfaces, use a port redirect in the firewall to redirect the interfaces you need to localhost.</help>
+        <label>Listen Address:</label>
+	<type>text</type>
+	<help>Address to listen on.  Default is to listen on all interfaces. If you need specific multiple interfaces, listen on localhost and use a port redirect in the firewall to redirect the interfaces you need to localhost.  IPv6 localhost (::1) will listen on both IPv6 and IPv4.</help>
+    </field>
+    <field>
+	<id>tang.general.jwkdir</id>
+	<label>JWK Directory:</label>
+	<type>text</type>
+	<help>Directory in which to store key files.  Defaults to /var/db/tang</help>
+	<advanced>true</advanced>
     </field>
  </form>

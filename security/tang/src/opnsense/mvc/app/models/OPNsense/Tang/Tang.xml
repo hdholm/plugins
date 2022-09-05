@@ -13,9 +13,8 @@
 	    <port type="PortField">
 		 <Default>8888</Default>
             </port>
-	    <interface type="InterfaceField">
-                <Required>N</Required>
-                <multiple>N</multiple>
+	    <interface type="TextField">
+                <default>"::"</default>
             </interface>
 	    <jwkdir type="TextField">
                 <default>"/var/db/tang"</default>
