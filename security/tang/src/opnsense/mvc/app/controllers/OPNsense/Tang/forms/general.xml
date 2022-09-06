@@ -24,4 +24,18 @@
 	<help>Directory in which to store key files.  Defaults to /var/db/tang</help>
 	<advanced>true</advanced>
     </field>
+    <field>
+	<id>tang.general.log</id>
+	<label>Logfile Locations:</label>
+	<type>text</type>
+	<help>Where to write logs.  Do not change unless you know what you're doing. Defaults to /var/log/tang</help>
+	<advanced>true</advanced>
+    </field>
+    <field>
+	<id>tang.general.executable</id>
+	<label>Executable Location:</label>
+	<type>text</type>
+	<help>Where to find the tang executable.  Don not change unless you know what you're doing.  Defaults to /usr/local/libexec/tangd</help>
+	<advanced>true</advanced>
+    </field>
  </form>

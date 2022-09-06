@@ -8,22 +8,22 @@
         <general>
 	    <!-- fields -->
             <enabled type="BooleanField">
-                <default>0</default>
+                <Default>0</Default>
             </enabled>
 	    <port type="PortField">
 		 <Default>8888</Default>
             </port>
 	    <interface type="TextField">
-                <default>"::"</default>
+                <Default>::</Default>
             </interface>
 	    <jwkdir type="TextField">
-                <default>"/var/db/tang"</default>
+                <Default>/var/db/tang</Default>
             </jwkdir>
 	    <log type="TextField">
-                <default>"/var/log/tang"</default>
+                <Default>/var/log/tang</Default>
             </log>
             <executable type="TextField">
-                <default>"/usr/local/libexec/tangd"</default>
+                <Default>/usr/local/libexec/tangd</Default>
             </executable>
         </general>
     </items>
