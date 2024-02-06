@@ -6,6 +6,94 @@ WWW: https://github.com/ddclient/ddclient
 Plugin Changelog
 ================
 
+1.20
+
+* Add system parameter to native dyndns2 requesto (contributed by Jakub Gargul)
+* Add Digitalocean support (contributed by Mathias Schneuwly)
+* Add Mythin Beasts support (contributed by PeterF)
+
+1.19
+
+* Add Porkbun support (contributed by briandur)
+* Add native service for Domeneshop (contributed by Bernhard Frenking)
+
+1.18
+
+* Update to ddclient 3.11.2 FreeBSD ports version
+* Default to native backend for new installs
+* Fix permission of ddclient.json
+
+1.17
+
+* Update to ddclient 3.11.1 (dnsexit legacy support removed)
+
+1.16
+
+* Add custom GET/PUT protocols to native backend (contributed by DaCookie4u)
+* Consider all 2xx status codes as success in native dyndns2 implementation
+
+1.15
+
+* Add AWS Route53 and DuckDNS to native backend (contributed by Greg Glockner)
+* Fix JSON output with disabled trailing accounts/escaping and empty stats in AccountField
+* Rename Python-based "OPNsense" backend to "native" to prevent ambiguity
+* Do not update on native backend when IP detection failed and emit a warning instead
+* Add desec to native backend (contributed by Clemens Hardewig)
+* Fix ClouDNS missing dynurl= parameter
+* Clean up ddclient.conf template
+
+1.14
+
+* Add "post" protocol in custom service type
+* Add DNSExit API and regfish.de support to ddclient backend
+
+1.13
+
+* Fix not returning IP address as a string in native backend (contributed by Sean Kelly)
+* Fix PID file handling for native backend
+* Use API token for cloudflare native backend if available (contributed by juantxorena)
+* Read proxied attribute from cloudflare hostname and send it back to prevent it being removed
+* Move accounting of "last accessed timestamp" to poller in native backend
+* Change if= use to proper ifv4=/ifv6= use (contributed by Rhys Barrie)
+
+1.12
+
+* Add cloudflare implementation for native backend (contributed by Thomas Cekal)
+* Allow custom target hostname for dyndns2 protocol in native backend
+* Adjust for missing ipv6= option including upstream patches for use=/usev4=/usev6=
+* Require a selected interface through validation when interface check method is used
+
+1.11
+
+* Add Python-based native backend support for custom ddclient-like implementation using the same input
+* Add AzureDNS backende using OAuth 2.0
+* Add dyndns2 backend using said API
+
+1.10
+
+* Update to ddclient 3.10.0
+* Add 1984 support (contributed by Luca Schoeneberg)
+* Add ClouDNS support (contributed by Luca Schoeneberg)
+* Add Dinahosting support (contributed by Luca Schoeneberg)
+* Add DNSExit support (contributed by Luca Schoeneberg)
+* Add DonDominio support (contributed by Luca Schoeneberg)
+* Add Freemyip support (contributed by Luca Schoeneberg)
+* Add godaddy support (contributed by Luca Schoeneberg)
+* Add Hetzner support (contributed by Luca Schoeneberg)
+* Add Key-Systems support (contributed by Luca Schoeneberg)
+* Add NearlyFreeSpeech.NET support (contributed by Luca Schoeneberg)
+* Add Njal.la support (contributed by satrapes)
+* Add sitelutions support (contributed by Luca Schoeneberg)
+* Add woima support (contributed by Luca Schoeneberg)
+* Add Yandex support (contributed by Luca Schoeneberg)
+
+1.9
+
+* Add icanhazip.com as a checkip provider (contributed by Matt Parnell)
+* Configurable checkip (contributed by Christian Schulze)
+* Allow % characters in usernames
+* Fix parsing short IPv6 addresses from external service (contributed by Patrick Grupp)
+
 1.8
 
 * Add a force action available via cron

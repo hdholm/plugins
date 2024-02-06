@@ -1,14 +1,14 @@
 <model>
     <mount>//OPNsense/quagga/bgp</mount>
     <description>BGP Routing configuration</description>
-    <version>1.0.6</version>
+    <version>1.0.8</version>
     <items>
         <enabled type="BooleanField">
             <default>0</default>
             <Required>Y</Required>
         </enabled>
         <asnumber type="IntegerField">
-            <default></default>
+            <default>65551</default>
             <Required>Y</Required>
             <MinimumValue>1</MinimumValue>
             <MaximumValue>4294967295</MaximumValue>
@@ -21,6 +21,14 @@
             <default>0</default>
             <Required>Y</Required>
         </graceful>
+        <networkimportcheck type="BooleanField">
+            <default>1</default>
+            <Required>Y</Required>
+        </networkimportcheck>
+        <logneighborchanges type="BooleanField">
+            <default>0</default>
+            <Required>Y</Required>
+        </logneighborchanges>
         <networks type="CSVListField">
             <default></default>
             <Required>N</Required>
@@ -107,6 +115,10 @@
                                 <default>0</default>
                                 <Required>N</Required>
                         </rrclient>
+                        <soft_reconfiguration_inbound type="BooleanField">
+                                <default>0</default>
+                                <Required>N</Required>
+                        </soft_reconfiguration_inbound>
                         <bfd type="BooleanField">
                                 <default>0</default>
                                 <Required>N</Required>
@@ -138,6 +150,15 @@
                                 <default>0</default>
                                 <Required>N</Required>
                         </disable_connected_check>
+                        <attributeunchanged type="OptionField">
+                                <default></default>
+                                <Required>N</Required>
+                                <OptionValues>
+                                        <as-path>as-path</as-path>
+                                        <next-hop>next-hop</next-hop>
+                                        <med>med</med>
+                                </OptionValues>
+                        </attributeunchanged>
                         <linkedPrefixlistIn type="ModelRelationField">
                                 <Model>
                                         <template>
@@ -205,8 +226,8 @@
                         <number type="IntegerField">
                                 <default></default>
                                 <Required>Y</Required>
-                                <MinimumValue>10</MinimumValue>
-                                <MaximumValue>99</MaximumValue>
+                                <MinimumValue>0</MinimumValue>
+                                <MaximumValue>4294967295</MaximumValue>
                         </number>
                         <action type="OptionField">
                                 <default></default>
@@ -249,8 +270,8 @@
                         <seqnumber type="IntegerField">
                                 <default></default>
                                 <Required>Y</Required>
-                                <MinimumValue>10</MinimumValue>
-                                <MaximumValue>10000</MaximumValue>
+                                <MinimumValue>1</MinimumValue>
+                                <MaximumValue>4294967294</MaximumValue>
                         </seqnumber>
                         <action type="OptionField">
                                 <default></default>
@@ -330,8 +351,8 @@
                         <id type="IntegerField">
                                 <default></default>
                                 <Required>Y</Required>
-                                <MinimumValue>10</MinimumValue>
-                                <MaximumValue>99</MaximumValue>
+                                <MinimumValue>1</MinimumValue>
+                                <MaximumValue>65535</MaximumValue>
                         </id>
                         <match type="ModelRelationField">
                                 <Model>

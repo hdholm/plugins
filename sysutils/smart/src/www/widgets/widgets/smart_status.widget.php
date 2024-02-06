@@ -3,7 +3,7 @@
 /*
  * Copyright (C) 2018 Smart-Soft
  * Copyright (C) 2014 Deciso B.V.
- * Copyright 2012 mkirbst @ pfSense Forum
+ * Copyright (C) 2012 mkirbst
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,7 @@ $devs = json_decode(configd_run('smart detailed list'));
 
     <tr>
       <td><?= html_safe($dev->device) ?></td>
-      <td><?= html_safe($dev->ident) ?></td>
+      <td style="word-break: break-word;"><?= html_safe($dev->ident) ?></td>
       <td><span class="label label-<?= $color ?>"><?= html_safe($dev_state_translated) ?></span></td>
     </tr>
 

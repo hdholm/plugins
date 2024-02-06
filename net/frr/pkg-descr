@@ -12,6 +12,48 @@ WWW: https://frrouting.org/
 Plugin Changelog
 ================
 
+1.39
+
+* Add plain password authentication to OSPF
+
+1.38
+
+* Add "soft-reconfiguration inbound" neighbor option
+
+1.37
+
+* Add Adjacency Logging to OSPF
+
+1.36
+
+* Added default-information originate option for OSPFv3
+
+1.35
+
+* Added automatic OSPFv3 firewall rules and opt-out automatic rule switch (contributed by Bill Gertz)
+
+1.34
+
+* Add checkbox to log BGP neighbor changes
+* Add BFD support (contributed by Mark Stitson)
+* Switch to FRR version 8
+* Rewrote diagnostics API
+
+1.33
+
+* Allow both IPv4 and IPv6 in BGP via setkey (contributed by as8net)
+
+1.32
+
+* Add attribute-unchanged option (contributed by Patrik Kernstock)
+
+1.31
+
+* Set no bgp default ipv4-unicast (contributed by vnxme)
+* Increase artifical BGP GUI ID limits (contributed by Patrik Kernstock)
+* Add BGP Network Import-Check (contributed by Patrik Kernstock)
+* Assorted GUI fixes (contributed by Patrik Kernstock)
+
 1.30
 
 * Allow specifying multiple PrefixLists and CommunityLists (contributed by Patrik Kernstock)

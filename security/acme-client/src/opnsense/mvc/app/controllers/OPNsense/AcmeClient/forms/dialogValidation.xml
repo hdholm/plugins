@@ -126,9 +126,10 @@
     </field>
     <field>
         <id>validation.dns_sleep</id>
-        <label>Sleep Time</label>
+        <label>DNS Sleep Time</label>
         <type>text</type>
-        <help>The time in seconds to wait for all the TXT records to take effect after adding them to the DNS API. Defaults to 120 seconds.</help>
+        <help>The time in seconds to wait for all the TXT records to take effect after adding them to the DNS API. Defaults to 0 seconds, which causes Acme Client to check public DNS services every 10 seconds for up to 20 minutes. If set to a non-zero value, a fixed DNS sleep time will be used and the local DNS servers will be queried instead. A DNS sleep time of 120 seconds or more is recommended for some DNS APIs.</help>
+        <hint>0 for public DNS check or 1-84600s</hint>
     </field>
     <field>
         <label>Active24</label>
@@ -223,6 +224,16 @@
     <field>
         <id>validation.dns_azuredns_clientsecret</id>
         <label>Client Secret</label>
+        <type>text</type>
+    </field>
+    <field>
+        <label>Bunny</label>
+        <type>header</type>
+        <style>table_dns table_dns_bunny</style>
+    </field>
+    <field>
+        <id>validation.dns_bunny_api_key</id>
+        <label>API Key</label>
         <type>text</type>
     </field>
     <field>
@@ -356,6 +367,26 @@
         <type>text</type>
     </field>
     <field>
+        <label>DNSExit</label>
+        <type>header</type>
+        <style>table_dns table_dns_dnsexit</style>
+    </field>
+    <field>
+        <id>validation.dns_dnsexit_auth_user</id>
+        <label>User</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_dnsexit_auth_pass</id>
+        <label>Password</label>
+        <type>password</type>
+    </field>
+    <field>
+        <id>validation.dns_dnsexit_api</id>
+        <label>API Key</label>
+        <type>text</type>
+    </field>
+    <field>
         <label>DNSimple</label>
         <type>header</type>
         <style>table_dns table_dns_dnsimple</style>
@@ -365,6 +396,21 @@
         <label>OAuth Token</label>
         <type>text</type>
         <help>Note that this is the account token not the user token.</help>
+    </field>
+    <field>
+        <label>DNS.Services</label>
+        <type>header</type>
+        <style>table_dns table_dns_dnsservices</style>
+    </field>
+    <field>
+        <id>validation.dns_dnsservices_user</id>
+        <label>User</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_dnsservices_password</id>
+        <label>Password</label>
+        <type>password</type>
     </field>
     <field>
         <label>Domain-Offensive LetsEncrypt</label>
@@ -497,9 +543,15 @@
         <style>table_dns table_dns_gandi_livedns</style>
     </field>
     <field>
-        <id>validation.dns_gandi_livedns_key</id>
-        <label>Key</label>
+        <id>validation.dns_gandi_livedns_token</id>
+        <label>Personal Access Token</label>
         <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_gandi_livedns_key</id>
+        <label>API Key (DEPRECATED)</label>
+        <type>text</type>
+        <help>The API Key is the previous mechanism that was replaced with Personal Access Tokens. API Keys should no longer be used.</help>
     </field>
     <field>
         <label>Google Cloud DNS</label>
@@ -538,6 +590,21 @@
     <field>
         <id>validation.dns_gd_secret</id>
         <label>Secret</label>
+        <type>text</type>
+    </field>
+    <field>
+        <label>Google Domains</label>
+        <type>header</type>
+        <style>table_dns table_dns_googledomains</style>
+    </field>
+    <field>
+        <id>validation.dns_googledomains_access_token</id>
+        <label>Access Token</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_googledomains_zone</id>
+        <label>Zone</label>
         <type>text</type>
     </field>
     <field>
@@ -618,6 +685,16 @@
         <type>password</type>
     </field>
     <field>
+        <label>IPv64.net API</label>
+        <type>header</type>
+        <style>table_dns table_dns_ipv64</style>
+    </field>
+    <field>
+        <id>validation.dns_ipv64_token</id>
+        <label>IPv64.net API Token</label>
+        <type>password</type>
+    </field>
+    <field>
         <label>IPSConfig</label>
         <type>header</type>
         <style>table_dns table_dns_ispconfig</style>
@@ -642,6 +719,26 @@
         <label>Disable SSL Verification</label>
         <type>checkbox</type>
         <help>Uncheck this box if you have a valid SSL certificate for your ISPConfig installation.</help>
+    </field>
+    <field>
+        <label>JD Cloud</label>
+        <type>header</type>
+        <style>table_dns table_dns_jd</style>
+    </field>
+    <field>
+        <id>validation.dns_jd_id</id>
+        <label>API key id</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_jd_region</id>
+        <label>JD Cloud region</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_jd_secret</id>
+        <label>API key secret</label>
+        <type>text</type>
     </field>
     <field>
         <label>Joker</label>
@@ -691,12 +788,7 @@
         <help>Specify the location of the generated TSIG Key inside the TSIG file using grep and cut, example: grep \# /etc/knot/acme.key | cut -d' ' -f2</help>
     </field>
     <field>
-        <label>lexicon</label>
-        <type>header</type>
-        <style>table_dns table_dns_lexicon</style>
-    </field>
-    <field>
-        <label>NOTE: A DNS sleep time of at least 1000 may be required.</label>
+        <label>lexicon (DEPRECATED)</label>
         <type>header</type>
         <style>table_dns table_dns_lexicon</style>
     </field>
@@ -952,6 +1044,16 @@
         <help>Optionally set the name of the hosted zone (e.g. example.com) as some DNS Providers require, like dyn.com's 'Standard DNS'.</help>
     </field>
     <field>
+        <label>online.net</label>
+        <type>header</type>
+        <style>table_dns table_dns_online</style>
+    </field>
+    <field>
+        <id>validation.dns_online_key</id>
+        <label>API key</label>
+        <type>text</type>
+    </field>
+    <field>
         <label>opnsense</label>
         <type>header</type>
         <style>table_dns table_dns_opnsense</style>
@@ -1065,16 +1167,10 @@
         <type>password</type>
     </field>
     <field>
-        <id>validation.dns_selfhost_rid</id>
-        <label>rid</label>
-        <type>text</type>
-        <help>Please create the TXT Record with Subdomain _acme-challenge first, than you can get the ID from the edit page.</help>
-    </field>
-    <field>
-        <id>validation.dns_selfhost_rid2</id>
-        <label>rid2</label>
-        <type>text</type>
-        <help>Please create a second TXT Record with Subdomain _acme-challenge (needed to support ACME v2).</help>
+        <id>validation.dns_selfhost_map</id>
+        <label>RID Mapping</label>
+        <type>textbox</type>
+        <help>Please create the TXT record with subdomain _acme-challenge first, than you can get the ID from the edit page. Up to two RIDs per fulldomain are supported but at least one must be set, e.g. _acme-challenge.domain.net:RID:RID2</help>
     </field>
     <field>
         <label>Servercow</label>
@@ -1322,6 +1418,21 @@
         <label>Password</label>
         <type>password</type>
     </field>
+     <field>
+        <label>EasyDNS</label>
+        <type>header</type>
+        <style>table_dns table_dns_easydns</style>
+    </field>
+    <field>
+        <id>validation.dns_easydns_apitoken</id>
+        <label>API Token</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_easydns_apikey</id>
+        <label>Api Key</label>
+        <type>password</type>
+    </field>
     <field>
         <label>EUserv</label>
         <type>header</type>
@@ -1530,5 +1641,190 @@
         <label>cPanel Hostname</label>
         <type>text</type>
         <help>EX: https://hostname:2083</help>
+    </field>
+    <field>
+        <label>regru</label>
+        <type>header</type>
+        <style>table_dns table_dns_regru</style>
+    </field>
+    <field>
+        <id>validation.dns_regru_username</id>
+        <label>User</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_regru_password</id>
+        <label>Password</label>
+        <type>password</type>
+    </field>
+    <field>
+        <label>nic.ru</label>
+        <type>header</type>
+        <style>table_dns table_dns_nic</style>
+    </field>
+    <field>
+        <id>validation.dns_nic_username</id>
+        <label>User</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_nic_password</id>
+        <label>Password</label>
+        <type>password</type>
+    </field>
+    <field>
+        <id>validation.dns_nic_client</id>
+        <label>ClientId</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_nic_secret</id>
+        <label>ClientSecret</label>
+        <type>password</type>
+    </field>
+    <field>
+        <label>World4You</label>
+        <type>header</type>
+        <style>table_dns table_dns_world4you</style>
+    </field>
+    <field>
+        <id>validation.dns_world4you_username</id>
+        <label>User</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_world4you_password</id>
+        <label>Password</label>
+        <type>password</type>
+    </field>
+    <field>
+        <label>Aurora (PCextreme/Versio)</label>
+        <type>header</type>
+        <style>table_dns table_dns_aurora</style>
+    </field>
+    <field>
+        <id>validation.dns_aurora_key</id>
+        <label>Key</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_aurora_secret</id>
+        <label>Secret</label>
+        <type>password</type>
+    </field>
+    <field>
+        <label>ConoHa</label>
+        <type>header</type>
+        <style>table_dns table_dns_conoha</style>
+    </field>
+    <field>
+        <id>validation.dns_conoha_user</id>
+        <label>User</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_conoha_password</id>
+        <label>Password</label>
+        <type>password</type>
+    </field>
+    <field>
+        <id>validation.dns_conoha_tenantid</id>
+        <label>Tenant ID</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_conoha_idapi</id>
+        <label>Identity Service API</label>
+        <type>text</type>
+    </field>
+    <field>
+        <label>Constellix</label>
+        <type>header</type>
+        <style>table_dns table_dns_constellix</style>
+    </field>
+    <field>
+        <id>validation.dns_constellix_key</id>
+        <label>Key</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_constellix_secret</id>
+        <label>Secret</label>
+        <type>password</type>
+    </field>
+    <field>
+        <label>Exoscale</label>
+        <type>header</type>
+        <style>table_dns table_dns_exoscale</style>
+    </field>
+    <field>
+        <id>validation.dns_exoscale_key</id>
+        <label>API Key</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_exoscale_secret</id>
+        <label>Secret Key</label>
+        <type>password</type>
+    </field>
+    <field>
+        <label>internetbs.net</label>
+        <type>header</type>
+        <style>table_dns table_dns_internetbs</style>
+    </field>
+    <field>
+        <id>validation.dns_internetbs_key</id>
+        <label>API Key</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_internetbs_password</id>
+        <label>Password</label>
+        <type>password</type>
+    </field>
+    <field>
+        <label>PointHQ</label>
+        <type>header</type>
+        <style>table_dns table_dns_pointhq</style>
+    </field>
+    <field>
+        <id>validation.dns_pointhq_key</id>
+        <label>API Key</label>
+        <type>password</type>
+    </field>
+    <field>
+        <id>validation.dns_pointhq_email</id>
+        <label>E-Mail</label>
+        <type>text</type>
+    </field>
+    <field>
+        <label>Rackspace</label>
+        <type>header</type>
+        <style>table_dns table_dns_rackspace</style>
+    </field>
+    <field>
+        <id>validation.dns_rackspace_user</id>
+        <label>Username</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_rackspace_key</id>
+        <label>API Key</label>
+        <type>password</type>
+    </field>
+    <field>
+        <label>rage4</label>
+        <type>header</type>
+        <style>table_dns table_dns_rage4</style>
+    </field>
+    <field>
+        <id>validation.dns_rage4_user</id>
+        <label>Username</label>
+        <type>text</type>
+    </field>
+    <field>
+        <id>validation.dns_rage4_token</id>
+        <label>Token</label>
+        <type>password</type>
     </field>
 </form>
