@@ -42,6 +42,7 @@ emulators/qemu-guest-agent -- QEMU Guest Agent for OPNsense
 ftp/tftp -- TFTP server
 mail/postfix -- SMTP mail relay
 mail/rspamd -- Protect your network from spam
+misc/theme-advanced -- OPNsense theme based on AdvancedTomato GUI
 misc/theme-cicada -- The cicada theme - dark grey onyx
 misc/theme-rebellion -- A suitably dark theme
 misc/theme-tukan -- The tukan theme - blue/white
@@ -62,7 +63,7 @@ net/shadowsocks -- Secure socks5 proxy
 net/siproxd -- Siproxd is a proxy daemon for the SIP protocol
 net/sslh -- sslh configuration front-end
 net/tayga -- Tayga NAT64
-net/udpbroadcastrelay -- Control ubpbroadcastrelay processes
+net/udpbroadcastrelay -- Control udpbroadcastrelay processes
 net/upnp -- Universal Plug and Play (UPnP IGD & PCP/NAT-PMP) Service
 net/vnstat -- Network traffic monitor
 net/wol -- Wake on LAN Service
@@ -91,6 +92,8 @@ security/tor -- The Onion Router
 security/wazuh-agent -- Agent for the open source security platform Wazuh
 sysutils/apcupsd -- APCUPSD - APC UPS daemon
 sysutils/apuled -- PC Engine APU LED control (development only)
+sysutils/cpu-microcode-amd -- AMD CPU microcode updates
+sysutils/cpu-microcode-intel -- Intel CPU microcode updates
 sysutils/dec-hw -- Deciso hardware specific information
 sysutils/dmidecode -- Display hardware information on the dashboard
 sysutils/git-backup -- Track config changes using git
@@ -107,9 +110,10 @@ sysutils/virtualbox -- VirtualBox guest additions
 sysutils/vmware -- VMware tools
 sysutils/xen -- Xen guest utilities
 vendor/sunnyvalley -- Vendor Repository for Zenarmor (a.k.a Sensei, Next Generation Firewall Extensions)
+www/OPNProxy -- OPNsense proxy additions
 www/c-icap -- c-icap connects the web proxy with a virus scanner
 www/cache -- Webserver cache
-www/caddy -- Easy to configure Reverse Proxy based on Caddy with Automatic HTTPS and Dynamic DNS
+www/caddy -- Easy to configure Reverse Proxy with Automatic HTTPS and Dynamic DNS
 www/nginx -- Nginx HTTP server and reverse proxy
 www/squid -- Squid is a caching proxy for the web
 www/web-proxy-sso -- Kerberos authentication module

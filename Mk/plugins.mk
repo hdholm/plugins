@@ -211,7 +211,7 @@ scripts-post:
 install: check
 	@mkdir -p ${DESTDIR}${LOCALBASE}/opnsense/version
 	@(cd ${.CURDIR}/src 2> /dev/null && find * -type f) | while read FILE; do \
-		tar -C ${.CURDIR}/src -cpf - $${FILE} | \
+		tar -C ${.CURDIR}/src -cpf - "$${FILE}" | \
 		    tar -C ${DESTDIR}${LOCALBASE} -xpf -; \
 		if [ "$${FILE%%.in}" != "$${FILE}" ]; then \
 			sed -i '' ${SED_REPLACE} "${DESTDIR}${LOCALBASE}/$${FILE}"; \
@@ -253,17 +253,17 @@ metadata: check
 
 collect: check
 	@(cd ${.CURDIR}/src 2> /dev/null && find * -type f) | while read FILE; do \
-		tar -C ${DESTDIR}${LOCALBASE} -cpf - $${FILE} | \
+		tar -C ${DESTDIR}${LOCALBASE} -cpf - "$${FILE}" | \
 		    tar -C ${.CURDIR}/src -xpf -; \
 	done
 
 remove: check
 	@(cd ${.CURDIR}/src 2> /dev/null && find * -type f) | while read FILE; do \
-		rm -f ${DESTDIR}${LOCALBASE}/$${FILE}; \
+		rm -f "${DESTDIR}${LOCALBASE}/$${FILE}"; \
 	done
 	@(cd ${.CURDIR}/src 2> /dev/null && find * -type d -depth) | while read DIR; do \
-		if [ -d ${DESTDIR}${LOCALBASE}/$${DIR} ]; then \
-			rmdir ${DESTDIR}${LOCALBASE}/$${DIR} 2> /dev/null || true; \
+		if [ -d "${DESTDIR}${LOCALBASE}/$${DIR}" ]; then \
+			rmdir "${DESTDIR}${LOCALBASE}/$${DIR}" 2> /dev/null || true; \
 		fi; \
 	done
 
@@ -324,7 +324,7 @@ lint-shell:
 	    if [ "$$(head $${FILE} | grep -c '^#!\/')" == "0" ]; then \
 	        echo "Missing shebang in $${FILE}"; exit 1; \
 	    fi; \
-	    sh -n $${FILE} || exit 1; \
+	    sh -n "$${FILE}" || exit 1; \
 	done
 
 lint-xml:
@@ -372,13 +372,7 @@ lint-php: check
 .if exists(${LINTBIN})
 	@if [ -d ${.CURDIR}/src ]; then ${LINTBIN} src; fi
 .else
-	@find ${.CURDIR}/src \
-	    ! -name "*.xml" ! -name "*.xml.sample" ! -name "*.eot" \
-	    ! -name "*.svg" ! -name "*.woff" ! -name "*.woff2" \
-	    ! -name "*.otf" ! -name "*.png" ! -name "*.js" ! -name "*.md" \
-	    ! -name "*.scss" ! -name "*.py" ! -name "*.ttf" ! -name "*.txz" \
-	    ! -name "*.tgz" ! -name "*.xml.dist" ! -name "*.sh" ! -name "bootstrap80.php" \
-	    -type f -print0 | xargs -0 -n1 php -l
+	@echo "Did not find LINTBIN, please provide a core repository"; exit 1
 .endif
 
 lint: lint-desc lint-shell lint-xml lint-model lint-exec lint-php
@@ -388,10 +382,6 @@ plist-fix:
 sweep: check
 	find ${.CURDIR}/src -type f -name "*.map" -print0 | \
 	    xargs -0 -n1 rm
-	if grep -nr sourceMappingURL= ${.CURDIR}/src; then \
-		echo "Mentions of sourceMappingURL must be removed"; \
-		exit 1; \
-	fi
 	find ${.CURDIR}/src ! -name "*.min.*" ! -name "*.svg" \
 	    ! -name "*.ser" -type f -print0 | \
 	    xargs -0 -n1 ${SCRIPTSDIR}/cleanfile

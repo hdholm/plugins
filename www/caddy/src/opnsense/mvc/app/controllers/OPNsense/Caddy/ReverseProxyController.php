@@ -33,13 +33,17 @@ namespace OPNsense\Caddy;
 
 use OPNsense\Base\IndexController;
 
-class ReverseProxyController extends IndexController {
-    public function indexAction() {
+class ReverseProxyController extends IndexController
+{
+    public function indexAction()
+    {
         $this->view->pick('OPNsense/Caddy/reverse_proxy');
         $this->view->formDialogReverseProxy = $this->getForm("dialogReverseProxy");
         $this->view->formDialogSubdomain = $this->getForm("dialogSubdomain");
         $this->view->formDialogHandle = $this->getForm("dialogHandle");
+        $this->view->formDialogLayer4 = $this->getForm("dialogLayer4");
         $this->view->formDialogAccessList = $this->getForm("dialogAccessList");
         $this->view->formDialogBasicAuth = $this->getForm("dialogBasicAuth");
+        $this->view->formDialogHeader = $this->getForm("dialogHeader");
     }
 }

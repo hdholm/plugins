@@ -41,6 +41,12 @@ class ServiceController extends ApiMutableServiceControllerBase
     protected static $internalServiceEnabled = 'general.enabled';
     protected static $internalServiceName = 'caddy';
 
+    protected function reconfigureForceRestart()
+    {
+        // Caddy can use a reload action instead
+        return 0;
+    }
+
     public function validateAction()
     {
         $backend = new Backend();
@@ -62,6 +68,6 @@ class ServiceController extends ApiMutableServiceControllerBase
         }
 
         // If unable to parse the expected JSON output, return a generic error message
-        return ["status" => "failed", "message" => "Unable to parse the validation result."];
+        return ["status" => "failed", "message" => gettext("Unable to parse the validation result.")];
     }
 }
