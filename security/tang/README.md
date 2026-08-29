@@ -1,0 +1,70 @@
+# os-tang — Tang NBDE key server plugin for OPNsense
+
+Manages the [Tang](https://github.com/latchset/tang) daemon for Network-Bound
+Disk Encryption (NBDE) from the OPNsense GUI, under **Services → Tang NBDE**.
+
+## How it runs
+
+The `security/tang` FreeBSD package ships the `tangd` program plus an
+`rc.d/tangd` script. This plugin does not replace that; it drives it:
+
+- The settings form writes `/etc/rc.conf.d/tangd` (via the configd template
+  `OPNsense/Tang`) with the exact variables the port's rc script reads:
+  `tangd_enable`, `tangd_port`, `tangd_jwkdir`, `tangd_logfile`,
+  `tangd_executable`.
+- Service start/stop/restart/status go through `service tangd` (configd
+  actions in `actions_tang.conf`, invoked by the standard
+  `ApiMutableServiceControllerBase`).
+- Before the daemon is started, the helper script ensures the key directory
+  exists and contains a key pair, generating one with `tangd-keygen` if needed.
+
+## Keys
+
+Keys are stored authoritatively in `config.xml` and mirrored to the on-disk key
+directory (default `/var/db/tang`) that tangd serves from. Storing them in
+`config.xml` means they are captured in configuration backups and replicated to
+High Availability peers automatically, with no extra steps.
+
+Synchronisation is handled by `scripts/OPNsense/Tang/store.php`:
+
+- **materialize** (`config.xml` -> disk) runs on boot, on apply, and before the
+  service starts - so a restored backup or a freshly synced HA peer serves the
+  right keys. tangd is spawned per connection by socat and re-reads the
+  directory every request, so no restart is needed for changes to take effect.
+- **capture** (disk -> `config.xml`) runs after every key operation, recording
+  the new on-disk state back into the configuration.
+
+Operations:
+
+- **Generate initial keys** — `tangd-keygen` (only when no keys exist yet).
+- **Rotate keys** — `tangd-rotate-keys` hides the current keys (renamed to
+  `.<thp>.jwk`, still served for existing bindings) and advertises a fresh pair.
+- **Delete hidden keys** — permanently removes the rotated-out `.<thp>.jwk`
+  keys. Do this only after every client has been re-provisioned.
+
+Because `config.xml` now contains private key material, protect your
+configuration backups accordingly.
+
+## Dependencies
+
+`tang` (which provides `tangd`, `tangd-keygen`, `tangd-rotate-keys`,
+`tang-show-keys` and the `rc.d/tangd` script.)
+
+## Firewall
+
+Tang performs no authentication. The tangd daemon listens on all
+interfaces by design; access is restricted at the firewall. On the General
+tab, select the interfaces that should be allowed to reach the daemon. The
+plugin then registers automatic rules (visible under Firewall: Automation)
+that pass the configured TCP port (default 9090) to this firewall on the
+selected interfaces and block it on all other interfaces, for both IPv4 and
+IPv6. Leaving the interface list empty adds no automatic rules, so access is
+then governed entirely by your existing ruleset.
+
+## Claude.ai
+Claude Pro (Opus 4.8 High) was  used to assist in creating the plugin. The bulk
+of that interaction is recorded [here](Claude.md)
+
+## License
+
+BSD 2-Clause.

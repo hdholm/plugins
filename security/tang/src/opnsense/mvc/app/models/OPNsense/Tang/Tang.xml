@@ -1,0 +1,47 @@
+<model>
+    <mount>//OPNsense/Tang</mount>
+    <version>1.0.0</version>
+    <description>Tang is a small daemon for binding data to the presence of a network.</description>
+    <items>
+        <general>
+            <enabled type="BooleanField">
+                <Default>0</Default>
+                <Required>Y</Required>
+            </enabled>
+            <port type="PortField">
+                <Default>9090</Default>
+                <Required>Y</Required>
+            </port>
+            <interfaces type="InterfaceField">
+                <Multiple>Y</Multiple>
+                <Required>N</Required>
+            </interfaces>
+            <jwkdir type="TextField">
+                <Default>/var/db/tang</Default>
+                <Required>Y</Required>
+                <Mask>/^\/[\w.\-\/]+$/</Mask>
+                <ValidationMessage>Enter an absolute path.</ValidationMessage>
+            </jwkdir>
+            <logfile type="TextField">
+                <Default>/var/log/tang</Default>
+                <Required>Y</Required>
+                <Mask>/^\/[\w.\-\/]+$/</Mask>
+                <ValidationMessage>Enter an absolute path.</ValidationMessage>
+            </logfile>
+        </general>
+        <keys>
+            <key type="ArrayField">
+                <filename type="TextField">
+                    <Required>Y</Required>
+                    <Mask>/^\.?[A-Za-z0-9_\-]+\.jwk$/</Mask>
+                    <ValidationMessage>Invalid key file name.</ValidationMessage>
+                </filename>
+                <payload type="TextField">
+                    <Required>Y</Required>
+                    <Mask>/^[A-Za-z0-9+\/=\r\n]+$/</Mask>
+                    <ValidationMessage>Key payload must be base64 encoded.</ValidationMessage>
+                </payload>
+            </key>
+        </keys>
+    </items>
+</model>

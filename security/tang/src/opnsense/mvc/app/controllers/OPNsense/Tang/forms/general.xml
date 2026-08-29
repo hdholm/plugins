@@ -1,0 +1,41 @@
+<form>
+    <field>
+        <id>tang.general.enabled</id>
+        <label>Enable Tang</label>
+        <type>checkbox</type>
+        <help>Start the Tang NBDE daemon (via socat) at boot.</help>
+    </field>
+    <field>
+        <id>tang.general.port</id>
+        <label>Listen port</label>
+        <type>text</type>
+        <help>TCP port the Tang server listens on. Default: 9090.</help>
+    </field>
+    <field>
+        <id>tang.general.interfaces</id>
+        <label>Restrict to interfaces</label>
+        <type>select_multiple</type>
+        <style>tokenize</style>
+        <help>
+            The tangd daemon listens on all interfaces. Select the interfaces that
+            should be allowed to reach it; the plugin then adds firewall rules that
+            pass the Tang port on the selected interfaces and block it everywhere
+            else. Leave empty to add no firewall rules (access is then governed by
+            your existing ruleset).
+        </help>
+    </field>
+    <field>
+        <id>tang.general.jwkdir</id>
+        <label>Key directory</label>
+        <type>text</type>
+        <advanced>true</advanced>
+        <help>Directory where Tang stores its JWK key files. Default: /var/db/tang.</help>
+    </field>
+    <field>
+        <id>tang.general.logfile</id>
+        <label>Log file</label>
+        <type>text</type>
+        <advanced>true</advanced>
+        <help>File that the daemon's stderr is appended to. Default: /var/log/tang.</help>
+    </field>
+</form>

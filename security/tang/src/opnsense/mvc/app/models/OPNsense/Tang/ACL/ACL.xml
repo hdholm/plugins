@@ -1,0 +1,9 @@
+<acl>
+    <page-services-tang>
+        <name>Services: Tang NBDE</name>
+        <patterns>
+            <pattern>ui/tang/*</pattern>
+            <pattern>api/tang/*</pattern>
+        </patterns>
+    </page-services-tang>
+</acl>
