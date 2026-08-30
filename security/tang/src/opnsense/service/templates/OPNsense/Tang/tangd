@@ -7,7 +7,6 @@ tangd_enable="YES"
 tangd_port="{{ OPNsense.Tang.general.port|default('9090') }}"
 tangd_jwkdir="{{ OPNsense.Tang.general.jwkdir|default('/var/db/tang') }}"
 tangd_logfile="{{ OPNsense.Tang.general.logfile|default('/var/log/tang') }}"
-tangd_executable="/usr/local/libexec/tangd"
 {% else %}
 tangd_enable="NO"
 {% endif %}
