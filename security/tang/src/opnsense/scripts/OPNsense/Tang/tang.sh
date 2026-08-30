@@ -44,10 +44,21 @@
 #   rotate                            - hide current keys, advertise a new pair
 #   delhidden                         - permanently delete hidden (rotated) keys
 #   list                              - emit JSON describing keys on disk
+#   log [lines] [filter]              - emit JSON with the tail of the log file
+#   clearlog                          - truncate the log file in place
 #
 # Key files:
 #   <jwkdir>/<thp>.jwk    advertised keys
 #   <jwkdir>/.<thp>.jwk   hidden keys (still served for existing bindings)
+#
+# Logging:
+#   The rc.d/tangd script shipped with security/tang appends the daemon's stderr
+#   to ${tangd_logfile} with "2>> ${tangd_logfile}", so the descriptor is opened
+#   O_APPEND and stays open for the lifetime of the daemon. clearlog therefore
+#   truncates the file in place rather than unlinking it: removing the file would
+#   leave the running daemon writing to an orphaned inode, and truncating a
+#   non-O_APPEND descriptor would leave a NUL-padded sparse file. Truncation also
+#   preserves the file's ownership and mode, and needs no service restart.
 # ---------------------------------------------------------------------------
 
 set -u
@@ -55,12 +66,25 @@ set -u
 CONFIG_XML="/conf/config.xml"
 LIBEXEC="/usr/local/libexec"
 DEFAULT_JWKDIR="/var/db/tang"
+DEFAULT_LOGFILE="/var/log/tang"
 PHP="/usr/local/bin/php"
 STORE="/usr/local/opnsense/scripts/OPNsense/Tang/store.php"
+
+# Largest slice of the log file examined by the "log" subcommand. Bounds both
+# memory use and response size on a log that has grown without rotation; the
+# emitted JSON reports whether the window clipped the file.
+LOG_WINDOW_BYTES=8388608
 
 jwkdir() {
     d=$(/usr/local/bin/xmllint --xpath "string(//OPNsense/Tang/general/jwkdir)" "${CONFIG_XML}" 2>/dev/null)
     [ -n "${d}" ] && echo "${d}" || echo "${DEFAULT_JWKDIR}"
+}
+
+# Path the rc.d script appends the daemon's stderr to, as configured on the
+# General tab (tangd_logfile in /etc/rc.conf.d/tangd).
+logfile() {
+    f=$(/usr/local/bin/xmllint --xpath "string(//OPNsense/Tang/general/logfile)" "${CONFIG_XML}" 2>/dev/null)
+    [ -n "${f}" ] && echo "${f}" || echo "${DEFAULT_LOGFILE}"
 }
 
 JWKDIR=$(jwkdir)
@@ -215,8 +239,79 @@ for pattern, advertised in patterns:
 print(json.dumps(rows))
 PYEOF
         ;;
+    log)
+        # Emit the tail of the log file as JSON. Arguments are supplied by
+        # configd, which already single-quotes them; they are re-validated here
+        # so the script is also safe to run by hand.
+        LOGFILE="$(logfile)" LINES="${2:-500}" FILTER="${3:-}" \
+            WINDOW="${LOG_WINDOW_BYTES}" /usr/local/bin/python3 - <<'PYEOF'
+import json, os
+
+path = os.environ.get("LOGFILE", "/var/log/tang")
+flt = os.environ.get("FILTER", "")
+
+def clamp(name, default, low, high):
+    try:
+        value = int(os.environ.get(name, ""))
+    except ValueError:
+        return default
+    return max(low, min(value, high))
+
+maxlines = clamp("LINES", 500, 1, 10000)
+window = clamp("WINDOW", 8388608, 65536, 67108864)
+
+result = {
+    "logfile": path,
+    "exists": False,
+    "size": 0,
+    "clipped": False,
+    "matched": 0,
+    "rows": [],
+}
+
+if os.path.isfile(path):
+    result["exists"] = True
+    size = os.path.getsize(path)
+    result["size"] = size
+    with open(path, "rb") as fh:
+        if size > window:
+            # Seek to the start of the window and drop the (probably partial)
+            # first line so callers never see a half record.
+            fh.seek(size - window)
+            fh.readline()
+            result["clipped"] = True
+        data = fh.read()
+    # The daemon writes plain text, but never assume that of a log file.
+    lines = data.decode("utf-8", "replace").splitlines()
+    if flt:
+        needle = flt.lower()
+        lines = [line for line in lines if needle in line.lower()]
+    result["matched"] = len(lines)
+    result["rows"] = [{"line": line} for line in lines[-maxlines:]]
+
+print(json.dumps(result))
+PYEOF
+        ;;
+    clearlog)
+        LOGFILE=$(logfile)
+        if [ ! -e "${LOGFILE}" ]; then
+            # Nothing written yet: report success so the GUI stays idempotent.
+            echo "OK: ${LOGFILE} does not exist"
+        elif [ ! -f "${LOGFILE}" ]; then
+            echo "ERROR: ${LOGFILE} is not a regular file"
+            exit 1
+        elif : > "${LOGFILE}"; then
+            # Truncate rather than unlink: the daemon holds an O_APPEND
+            # descriptor on this file and would otherwise keep writing to an
+            # inode nothing can read.
+            echo "OK: cleared ${LOGFILE}"
+        else
+            echo "ERROR: could not clear ${LOGFILE}"
+            exit 1
+        fi
+        ;;
     *)
-        echo "Usage: $0 {start|stop|restart|status|materialize|keygen|rotate|delhidden|list}" >&2
+        echo "Usage: $0 {start|stop|restart|status|materialize|keygen|rotate|delhidden|list|log|clearlog}" >&2
         exit 1
         ;;
 esac

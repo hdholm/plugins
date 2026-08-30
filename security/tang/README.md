@@ -42,6 +42,26 @@ Operations:
 Because `config.xml` now contains private key material, protect your
 configuration backups accordingly.
 
+## Logging
+
+The `rc.d/tangd` script appends the daemon's standard error to the file named by
+`tangd_logfile` (the **Log file** setting on the General tab, default
+`/var/log/tang`). tangd has no syslog facility of its own, so this plain file is
+the only record of client activity.
+
+The **Log** tab shows the tail of that file. Choose how many lines to display,
+optionally filter to a case-insensitive substring (handy for isolating a single
+client address), and use **Clear log** to empty the file.
+
+Clearing truncates the file in place instead of deleting it. The daemon holds an
+open append-mode descriptor on the log for as long as it runs, so unlinking the
+file would leave it writing to an inode nothing can read until the next restart.
+Truncation keeps the existing ownership and mode and needs no restart.
+
+Nothing here rotates the log. If it is left to grow, the viewer examines only the
+most recent 8 MiB and says so; add an entry under
+Services: Log Files if you want the file rotated on a schedule.
+
 ## Dependencies
 
 `tang` (which provides `tangd`, `tangd-keygen`, `tangd-rotate-keys`,
