@@ -10,8 +10,7 @@ The `security/tang` FreeBSD package ships the `tangd` program plus an
 
 - The settings form writes `/etc/rc.conf.d/tangd` (via the configd template
   `OPNsense/Tang`) with the exact variables the port's rc script reads:
-  `tangd_enable`, `tangd_port`, `tangd_jwkdir`, `tangd_logfile`,
-  `tangd_executable`.
+  `tangd_enable`, `tangd_port`, `tangd_jwkdir`, and `tangd_logfile`.
 - Service start/stop/restart/status go through `service tangd` (configd
   actions in `actions_tang.conf`, invoked by the standard
   `ApiMutableServiceControllerBase`).
@@ -29,14 +28,12 @@ Synchronisation is handled by `scripts/OPNsense/Tang/store.php`:
 
 - **materialize** (`config.xml` -> disk) runs on boot, on apply, and before the
   service starts - so a restored backup or a freshly synced HA peer serves the
-  right keys. tangd is spawned per connection by socat and re-reads the
-  directory every request, so no restart is needed for changes to take effect.
+  right keys.
 - **capture** (disk -> `config.xml`) runs after every key operation, recording
   the new on-disk state back into the configuration.
 
 Operations:
 
-- **Generate initial keys** — `tangd-keygen` (only when no keys exist yet).
 - **Rotate keys** — `tangd-rotate-keys` hides the current keys (renamed to
   `.<thp>.jwk`, still served for existing bindings) and advertises a fresh pair.
 - **Delete hidden keys** — permanently removes the rotated-out `.<thp>.jwk`
@@ -62,8 +59,9 @@ IPv6. Leaving the interface list empty adds no automatic rules, so access is
 then governed entirely by your existing ruleset.
 
 ## Claude.ai
-Claude Pro (Opus 4.8 High) was  used to assist in creating the plugin. The bulk
-of that interaction is recorded [here](Claude.md)
+Claude Pro (Opus 4.8 High) was  used to assist in creating the plugin based on
+some previous non-AI attempts. The bulk of that interaction is recorded
+[here](Claude.md).  All code was human reviewed and tested.
 
 ## License
 
