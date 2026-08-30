@@ -41,6 +41,11 @@ The key architectural question is how Tang actually runs (it's a
 socket-activated CGI-style program, not a self-listening daemon). Let me
 examine the other two branches to compare approaches.
 
+> Note: Claude actually gets it wrong here, and later, when it assumes that
+> tang is started by socat. That used to be true for BSD in previous versions
+> of tang. It is no longer true. The broken code Claude started from wsa
+> originally developed for previous versions of tang.
+
 The original `tang` branch depends on `socat` — that's the key insight for how
 Tang actually runs (socat listens on the port and spawns `tangd` per
 connection, providing the socket activation Tang needs). Let me see the rest
