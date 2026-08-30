@@ -27,8 +27,19 @@
 # Tang NBDE helper - invoked by configd (see actions_tang.conf).
 #
 # Service control is delegated to the rc.d/tangd script shipped by the
-# security/tang package (a socat listener that forks the tangd CGI per
-# connection). This wrapper keeps the on-disk JWK directory in sync with the
+# security/tang package. socat is not involved: since tang 15 the rc script runs
+# "tangd -p <port> -l <jwkdir>", which binds the port itself and stays resident
+# for as long as the service is enabled, forking a child per accepted connection.
+#
+# Key changes still take effect without restarting the daemon, but for a
+# different reason than a per-connection listener: each request handler in tangd
+# calls read_keys(<jwkdir>), which opendir()s the key directory and re-reads
+# every .jwk file on that request. Nothing is cached in the resident parent, so
+# a key written here is served by the next connection. Settings changes (port,
+# jwkdir, logfile) are command-line arguments and do need the restart that
+# reconfigure already performs.
+#
+# This wrapper keeps the on-disk JWK directory in sync with the
 # authoritative copy of the keys held in config.xml (which is what gets backed
 # up and replicated to HA peers), and drives the key-management tools that ship
 # with tang.
@@ -112,13 +123,18 @@ capture() {
     "${PHP}" "${STORE}" capture >/dev/null 2>&1 || true
 }
 
-# Restore keys from config, and if nothing exists anywhere, seed an initial pair.
+# Bring the key directory and config.xml into agreement before the daemon runs.
+#
+# materialize writes the configured keys to disk. When config.xml holds no keys
+# it adopts whatever is already in the directory instead of emptying it, so
+# installing the plugin on a firewall that already serves tang keeps that host's
+# keys and the bindings that depend on them.
 prepare_keys() {
     ensure_dir || return 1
     materialize
-    # tangd will generate it's own keys if none exist when it gets asked for
-    # keys.  But since we need to capture the generated keys for config.xml,
-    # we'll generate some if we don't have them and then capture them
+    # Only once both stores are genuinely empty is there nothing to preserve.
+    # tangd would otherwise mint a pair itself on the first request, behind our
+    # back and without it reaching config.xml, so seed one here and capture it.
     if ! have_keys; then
         "${LIBEXEC}/tangd-keygen" "${JWKDIR}" >/dev/null 2>&1 || return 1
         capture
