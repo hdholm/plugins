@@ -3,7 +3,7 @@
         <id>tang.general.enabled</id>
         <label>Enable Tang</label>
         <type>checkbox</type>
-        <help>Start the Tang NBDE daemon (via socat) at boot.</help>
+        <help>Start the Tang NBDE daemon at boot.</help>
     </field>
     <field>
         <id>tang.general.port</id>

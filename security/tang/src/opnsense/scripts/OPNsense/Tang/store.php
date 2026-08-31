@@ -80,6 +80,30 @@ function do_materialize()
             continue;
         }
         $wanted[$name] = $data;
+    }
+
+    /*
+     * An empty key list in config.xml is never an instruction to empty the key
+     * directory. It means this host's keys have not been adopted yet: the plugin
+     * was just installed on a firewall that already serves tang, or the
+     * directory was seeded out of band - note that tangd itself mints a pair on
+     * the first request whenever it finds the directory empty. Pruning here
+     * would destroy key material that live Clevis bindings depend on and that no
+     * backup has a copy of, since the whole point of the config.xml store is to
+     * be that backup. Adopt what is on disk instead.
+     */
+    if (empty($wanted)) {
+        $ondisk = tang_disk_files($dir);
+        if (empty($ondisk)) {
+            echo "no keys in configuration and none in {$dir}; nothing to do\n";
+            return;
+        }
+        echo "no keys in configuration; adopting " . count($ondisk) . " key(s) from {$dir}\n";
+        do_capture();
+        return;
+    }
+
+    foreach ($wanted as $name => $data) {
         $path = $dir . '/' . $name;
         if (!is_file($path) || file_get_contents($path) !== $data) {
             file_put_contents($path, $data);

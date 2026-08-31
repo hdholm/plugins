@@ -55,8 +55,8 @@ function tang_services()
 /**
  * Boot-time hook: write the keys held in config.xml out to the on-disk JWK
  * directory so a restored backup or a freshly synced HA peer serves the right
- * keys. tangd is spawned per-connection by socat and re-reads the directory on
- * every request, so no restart is required for the keys to take effect.
+ * keys. The resident tangd re-reads the key directory on every request (socat is
+ * not involved), so no restart is required for the keys to take effect.
  */
 function tang_configure()
 {

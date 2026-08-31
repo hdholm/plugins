@@ -78,6 +78,56 @@ $(document).ready(function () {
         });
     }
 
+    function fmtBytes(n) {
+        var units = ['B', 'KB', 'MB', 'GB'], i = 0;
+        n = Number(n) || 0;
+        while (n >= 1024 && i < units.length - 1) {
+            n /= 1024;
+            i++;
+        }
+        return (i === 0 ? n : n.toFixed(1)) + ' ' + units[i];
+    }
+
+    function loadLog() {
+        var out = $('#log-content');
+        var filter = $('#log-filter').val();
+        ajaxGet("/api/tang/log/get", {lines: $('#log-lines').val(), filter: filter}, function (d) {
+            if (!d || d.status !== 'ok') {
+                out.text('{{ lang._("Could not read the log file.") }}');
+                $('#log-meta').empty();
+                return;
+            }
+            var rows = d.rows || [];
+            if (!d.exists) {
+                out.text('{{ lang._("The log file does not exist yet. It is created the first time the daemon writes to it.") }}');
+            } else if (!rows.length) {
+                out.text(filter
+                    ? '{{ lang._("No lines match the filter.") }}'
+                    : '{{ lang._("The log file is empty.") }}');
+            } else {
+                /* .text() escapes on assignment; log lines contain remote input */
+                out.text(rows.map(function (r) { return r.line; }).join('\n'));
+            }
+
+            var meta = $('<span/>').text(d.logfile || '');
+            if (d.exists) {
+                meta.append(document.createTextNode(
+                    ' \u2014 ' + fmtBytes(d.size) +
+                    ' \u2014 ' + rows.length + '/' + d.matched + ' {{ lang._("lines shown") }}'
+                ));
+                if (d.clipped) {
+                    meta.append($('<span class="text-warning"/>').text(
+                        ' {{ lang._("(large file: only the most recent portion was examined)") }}'
+                    ));
+                }
+            }
+            $('#log-meta').empty().append(meta);
+
+            /* keep the newest entries in view */
+            out.scrollTop(out.prop('scrollHeight'));
+        });
+    }
+
     /* general settings */
     mapDataToFormUI({'frm_general': "/api/tang/settings/get"}).done(function () {
         formatTokenizersUI();
@@ -120,6 +170,39 @@ $(document).ready(function () {
         keyOp('keys/delhidden', '{{ lang._("Hidden keys deleted.") }}');
     });
 
+    /* log buttons */
+    $('#btn-reloadlog').on('click', loadLog);
+    $('#log-lines').on('change', loadLog);
+
+    var filterTimer = null;
+    $('#log-filter').on('keyup', function (e) {
+        clearTimeout(filterTimer);
+        if (e.which === 13) {
+            loadLog();
+        } else {
+            filterTimer = setTimeout(loadLog, 400);
+        }
+    });
+
+    $('#btn-clearlog').on('click', function () {
+        if (!confirm('{{ lang._("Clear the log file? Its current contents are discarded permanently. The daemon keeps running and continues logging to the same file.") }}')) return;
+        ajaxCall("/api/tang/log/clear", {}, function (d) {
+            if (d && d.status === 'ok') {
+                showAlert('success', '{{ lang._("Log file cleared.") }}');
+            } else {
+                showAlert('danger', (d && d.response)
+                    ? htmlEnc(d.response)
+                    : '{{ lang._("Could not clear the log file.") }}');
+            }
+            loadLog();
+        });
+    });
+
+    /* only read the log once the tab is actually opened */
+    $('a[data-toggle="tab"][href="#tab-log"]').on('shown.bs.tab', function () {
+        loadLog();
+    });
+
     refreshStatus();
     loadKeys();
     setInterval(refreshStatus, 10000);
@@ -132,6 +215,7 @@ $(document).ready(function () {
     <li><a data-toggle="tab" href="#tab-about">{{ lang._('About') }}</a></li>
     <li class="active"><a data-toggle="tab" href="#tab-general">{{ lang._('General') }}</a></li>
     <li><a data-toggle="tab" href="#tab-keys">{{ lang._('Keys') }}</a></li>
+    <li><a data-toggle="tab" href="#tab-log">{{ lang._('Log') }}</a></li>
 </ul>
 
 <div class="tab-content content-box">
@@ -173,6 +257,37 @@ $(document).ready(function () {
             <button id="btn-delhidden" class="btn btn-danger" type="button">
                 <i class="fa fa-trash"></i> {{ lang._('Delete hidden keys') }}
             </button>
+        </div>
+    </div>
+
+    <div id="tab-log" class="tab-pane fade">
+        <div class="content-box" style="padding: 10px 20px;">
+            <h4>{{ lang._('Daemon log') }}</h4>
+            <p class="text-muted">
+                {{ lang._('The Tang daemon appends its output to the log file named on the General tab. Lines are written as clients fetch the key advertisement and perform recovery, so this is the place to confirm that a client actually reached the server.') }}
+            </p>
+
+            <div class="form-inline" style="margin-bottom: 10px;">
+                <label for="log-lines">{{ lang._('Lines') }}</label>
+                <select id="log-lines" class="form-control">
+                    <option value="100">100</option>
+                    <option value="500" selected="selected">500</option>
+                    <option value="1000">1000</option>
+                    <option value="5000">5000</option>
+                </select>
+                <label for="log-filter" style="margin-left: 15px;">{{ lang._('Filter') }}</label>
+                <input id="log-filter" type="text" class="form-control" size="30"
+                       placeholder="{{ lang._('match text, e.g. an address') }}"/>
+                <button id="btn-reloadlog" class="btn btn-default" type="button" style="margin-left: 15px;">
+                    <i class="fa fa-refresh"></i> {{ lang._('Refresh') }}
+                </button>
+                <button id="btn-clearlog" class="btn btn-danger" type="button">
+                    <i class="fa fa-trash"></i> {{ lang._('Clear log') }}
+                </button>
+            </div>
+
+            <pre id="log-content" style="height: 480px; overflow: auto; white-space: pre-wrap; word-break: break-all;"></pre>
+            <div id="log-meta" class="text-muted"></div>
         </div>
     </div>
 
